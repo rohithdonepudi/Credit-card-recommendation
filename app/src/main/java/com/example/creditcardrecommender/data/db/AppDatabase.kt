@@ -9,15 +9,19 @@ import com.example.creditcardrecommender.data.entity.CardReward
 import com.example.creditcardrecommender.data.entity.CreditCard
 import com.example.creditcardrecommender.data.entity.GeofenceLocation
 import com.example.creditcardrecommender.data.entity.RewardCategory
+import com.example.creditcardrecommender.data.entity.Transaction
+import com.example.creditcardrecommender.data.entity.Budget
 
 @Database(
     entities = [
         CreditCard::class,
         RewardCategory::class,
         CardReward::class,
-        GeofenceLocation::class
+        GeofenceLocation::class,
+        Transaction::class,
+        Budget::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

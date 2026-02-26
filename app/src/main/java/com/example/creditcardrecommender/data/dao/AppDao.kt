@@ -9,6 +9,8 @@ import com.example.creditcardrecommender.data.entity.CardReward
 import com.example.creditcardrecommender.data.entity.CreditCard
 import com.example.creditcardrecommender.data.entity.GeofenceLocation
 import com.example.creditcardrecommender.data.entity.RewardCategory
+import com.example.creditcardrecommender.data.entity.Transaction
+import com.example.creditcardrecommender.data.entity.Budget
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -46,4 +48,19 @@ interface AppDao {
         LIMIT 1
     """)
     suspend fun getBestCardForCategory(categoryId: Int): CreditCard?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTransaction(transaction: Transaction): Long
+
+    @Query("SELECT * FROM transactions ORDER BY date DESC")
+    fun getAllTransactions(): Flow<List<Transaction>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBudget(budget: Budget): Long
+
+    @Query("SELECT * FROM budgets")
+    fun getAllBudgets(): Flow<List<Budget>>
+
+    @Query("SELECT SUM(amount) FROM transactions WHERE category = :category AND date >= :startDate")
+    fun getSpentInCategory(category: String, startDate: Long): Flow<Double?>
 }
