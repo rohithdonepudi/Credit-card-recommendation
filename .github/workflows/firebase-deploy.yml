@@ -7,6 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v4
 
@@ -27,7 +29,22 @@ jobs:
       run: echo "$GOOGLE_SERVICES_JSON" > app/google-services.json
 
     - name: Build with Gradle
-      run: gradle assembleDebug --stacktrace
+      id: build
+      run: gradle assembleDebug --stacktrace > build_output.log 2>&1
+      continue-on-error: true
+
+    - name: Commit build log
+      if: steps.build.outcome == 'failure'
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add build_output.log
+        git commit -m "chore: upload build failure log"
+        git push
+
+    - name: Fail if build failed
+      if: steps.build.outcome == 'failure'
+      run: exit 1
 
     - name: Upload APK as Artifact
       uses: actions/upload-artifact@v4
