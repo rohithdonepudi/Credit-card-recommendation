@@ -58,6 +58,7 @@ dependencies {
     // Location & WorkManager
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 
     // Room Database
     val room_version = "2.6.1"
